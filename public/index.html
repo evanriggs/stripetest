@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Donate</title>
+</head>
+<body>
+  <form id="donation-form">
+    <label>Amount ($)</label>
+    <input type="number" id="amount" required min="1" />
+
+    <label>Donation Type</label>
+    <select id="recurring">
+      <option value="false">One-time</option>
+      <option value="true">Monthly</option>
+    </select>
+
+    <button type="submit">Donate</button>
+  </form>
+
+  <script>
+    document.getElementById('donation-form').addEventListener('submit', async e => {
+      e.preventDefault();
+      const amount = document.getElementById('amount').value;
+      const recurring = document.getElementById('recurring').value === 'true';
+
+      const res = await fetch('/create-checkout-session', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ amount, recurring })
+      });
+      const data = await res.json();
+      window.location.href = data.url;
+    });
+  </script>
+</body>
+</html>
